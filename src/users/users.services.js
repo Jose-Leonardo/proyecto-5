@@ -156,11 +156,31 @@ const deleteUser = (req, res) => {
             })
         })
 }
-
+const getMyUser = (req, res) => {
+    const {id} = req.user
+    usersControllers.findUserById(id)
+        .then(data => {
+            responses.success({
+                    status: 200,
+                    data: data,
+                    message: 'Getting all Users',
+                    res
+                })
+        })
+        .catch(err => {
+            responses.error({
+                    status: 400,
+                    data: err,
+                    message: 'Something bad getting all users',
+                    res
+                })
+        })
+}
 module.exports = {
     getAllUsers,
     getUserById,
     postNewUser,
     patchUser,
-    deleteUser
+    deleteUser,
+    getMyUser
 }
