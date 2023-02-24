@@ -176,11 +176,75 @@ const getMyUser = (req, res) => {
                 })
         })
 }
+const deleteMyUser = (req, res) => {
+    const {id} = req.user
+    usersControllers.deleteUser(id) 
+    .then(data => {
+        responses.success({
+                status: 204,
+                data: data,
+                message: 'Getting all Users',
+                res
+            })
+    })
+    .catch(err => {
+        responses.error({
+                status: 400,
+                data: err,
+                message: 'Something bad getting all users',
+                res
+            })
+    })
+}
+const patchMyUser = (req, res) => {
+    const {id} = req.user
+    const  userObj = req.body
+    usersControllers.updateUser(id, userObj)
+        .then(data => {
+            if(data){
+                responses.success({
+                    status: 200,
+                    data, 
+                    message: `User with id: ${id} modified successfully`,
+                    res
+                })
+            } else {
+                responses.error({
+                    status: 404,
+                    message: `The user with ID ${id} not found`,
+                    res,
+                    fields: {
+                        firstName : 'String',
+                        lastName : 'String',
+                        profileImage: 'example.com/image.png',
+                        phone : '+52 1234 123 123'
+                    }
+                })
+            }
+        })
+        .catch(err => {
+            responses.error({
+                status: 400,
+                data: err,
+                message: `Error ocurred trying to update user with id ${id}`,
+                res,
+                fields: {
+                    firstName : 'String',
+                    lastName : 'String',
+                    profileImage: 'example.com/image.png',
+                    phone : '+52 1234 123 123'
+                }
+            })
+        })
+}
+
 module.exports = {
     getAllUsers,
     getUserById,
     postNewUser,
     patchUser,
     deleteUser,
-    getMyUser
+    getMyUser,
+    deleteMyUser,
+    patchMyUser
 }
